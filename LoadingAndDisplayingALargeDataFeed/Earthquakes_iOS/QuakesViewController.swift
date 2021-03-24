@@ -132,6 +132,7 @@ extension QuakesViewController: NSFetchedResultsControllerDelegate {
      Reloads the table view when the fetched result controller's content changes.
      */
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print(">>> controllerDidChangeContent CALLED")
         tableView.reloadData()
     }
 }

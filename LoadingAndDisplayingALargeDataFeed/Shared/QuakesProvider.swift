@@ -35,7 +35,7 @@ class QuakesProvider {
         }
 
         // This sample refreshes UI by refetching data, so doesn't need to merge the changes.
-        container.viewContext.automaticallyMergesChangesFromParent = false
+        container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         container.viewContext.undoManager = nil
         container.viewContext.shouldDeleteInaccessibleFaults = true
@@ -135,6 +135,8 @@ class QuakesProvider {
         // so it won’t block the main thread.
         let taskContext = newTaskContext()
         taskContext.performAndWait {
+            print(">>> taskContext START 1")
+            
             let batchInsert = self.newBatchInsertRequest(with: geoJSON.quakePropertiesList)
             batchInsert.resultType = .statusOnly
             
@@ -145,6 +147,9 @@ class QuakesProvider {
             performError = QuakeError.batchInsertError
         }
 
+        try? taskContext.save()
+        print(">>> taskContext SAVE 1")
+        
         if let error = performError {
             throw error
         }
@@ -292,6 +297,8 @@ class QuakesProvider {
                                                     managedObjectContext: persistentContainer.viewContext,
                                                     sectionNameKeyPath: nil, cacheName: nil)
         controller.delegate = fetchedResultsControllerDelegate
+        
+        print(">>> SETUP FRC delegate to \(controller.delegate)")
         
         // Perform the fetch.
         do {
